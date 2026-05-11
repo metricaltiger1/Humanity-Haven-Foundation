@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // --- Posts - Public read, signed-in users can write and delete ---
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- Events - Public read, signed-in users can write and delete ---
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- Products - Public read, signed-in users can write and delete ---
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- Orders - Anyone can create, signed-in users can read/update/delete ---
+    match /orders/{orderId} {
+      allow read: if isSignedIn();
+      allow create: if true;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- Messages - Anyone can create, signed-in users can manage and delete ---
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- RSVPs - Anyone can create, signed-in users can manage and delete ---
+    match /rsvps/{rsvpId} {
+      allow create: if true;
+      allow read: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // --- Contributions - Anyone can create, signed-in users can manage and delete ---
+    match /contributions/{contribId} {
+      allow create: if true;
+      allow read: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+  }
+}

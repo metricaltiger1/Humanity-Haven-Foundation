@@ -1,0 +1,159 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Commercial items supporting the cause",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number", "minimum": 0 },
+        "stock": { "type": "number", "minimum": 0 },
+        "image": { "type": "string" },
+        "category": { "type": "string", "enum": ["Apparel", "Accessories", "Art"] },
+        "impact": { "type": "string" },
+        "description": { "type": "string" },
+        "gallery": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "image", "category", "impact", "stock"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "User purchases via M-Pesa",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string", "format": "email" },
+        "mpesaNumber": { "type": "string" },
+        "items": { 
+          "type": "array", 
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" },
+              "image": { "type": "string" }
+            }
+          }
+        },
+        "totalAmount": { "type": "number", "minimum": 0 },
+        "deliveryMethod": { "type": "string", "enum": ["pickup"] },
+        "pickupLocation": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending_payment", "paid", "picked_up", "failed_payment"] },
+        "mpesaReceiptNumber": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "paidAt": { "type": "string", "format": "date-time" },
+        "pickedUpAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderId", "customerName", "customerEmail", "mpesaNumber", "items", "totalAmount", "status"]
+    },
+    "Event": {
+      "title": "Event",
+      "description": "Upcoming community events",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "description": { "type": "string" },
+        "story": { "type": "string" },
+        "img": { "type": "string" },
+        "gallery": { "type": "array", "items": { "type": "string" } },
+        "isUpcoming": { "type": "boolean" },
+        "year": { "type": "string" },
+        "type": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "date", "location", "img"]
+    },
+    "RSVP": {
+      "title": "RSVP",
+      "description": "Event attendance registration",
+      "type": "object",
+      "properties": {
+        "eventId": { "type": "string" },
+        "eventTitle": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "guests": { "type": "number", "minimum": 1, "maximum": 20 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["eventId", "eventTitle", "name", "email", "guests"]
+    },
+    "Contribution": {
+      "title": "Contribution",
+      "description": "Direct monetary donations",
+      "type": "object",
+      "properties": {
+        "contributionId": { "type": "string" },
+        "donorName": { "type": "string" },
+        "mpesaNumber": { "type": "string" },
+        "amount": { "type": "number", "minimum": 0 },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "mpesaReceiptNumber": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["donorName", "mpesaNumber", "amount"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Contact form submissions",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["unread", "read"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "subject", "message"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "M-Pesa transaction records",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "checkoutRequestID": { "type": "string" },
+        "merchantRequestID": { "type": "string" },
+        "mpesaReceiptNumber": { "type": "string" },
+        "amount": { "type": "number" },
+        "phoneNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "resultCode": { "type": "string" },
+        "resultDesc": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "products": { "schema": "Product", "description": "Global catalog of merchandise" },
+    "orders": { "schema": "Order", "description": "Customer purchases for fulfillment" },
+    "events": { "schema": "Event", "description": "Upcoming and past events" },
+    "rsvps": { "schema": "RSVP", "description": "Event attendee list" },
+    "contributions": { "schema": "Contribution", "description": "Direct monetary donations" },
+    "messages": { "schema": "Message", "description": "Contact form submissions" },
+    "mpesa_transactions": { "schema": "Payment", "description": "M-Pesa payment records" }
+  },
+  "indexes": {
+    "orders": [
+      { "field": "status", "order": "asc" },
+      { "field": "createdAt", "order": "desc" }
+    ],
+    "events": [
+      { "field": "isUpcoming", "order": "desc" },
+      { "field": "date", "order": "asc" }
+    ],
+    "contributions": [
+      { "field": "status", "order": "asc" },
+      { "field": "createdAt", "order": "desc" }
+    ]
+  }
+}
